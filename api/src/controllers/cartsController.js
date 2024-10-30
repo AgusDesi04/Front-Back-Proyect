@@ -1,7 +1,9 @@
 import CartsManager from "../daos/cartsManager.js"
 import ProductsManager from "../daos/productsManager.js"
+import * as services from "../services/ticketServices.js"
+import { createResponse } from "../utils.js"
 
-export const addCarts = async(req, res) =>{
+export const addCarts = async (req, res) => {
   let products = []
 
   let carts = await CartsManager.getCarts()
@@ -179,7 +181,7 @@ export const deleteAllProductsFromCart = async (req, res) => {
 
 export const updateProductsFromCart = async (req, res) => {
   let { cid } = req.params;
-  let { products } = req.body; 
+  let { products } = req.body;
 
   if (!Array.isArray(products) || products.length === 0) {
     return res.status(400).json({ error: "Se debe proporcionar un array de productos." });
@@ -212,7 +214,7 @@ export const updateProductsFromCart = async (req, res) => {
     await CartsManager.updateCart(cart);
 
     return res.status(200).json({ message: "Carrito actualizado con éxito.", cart });
-    
+
   } catch (error) {
     console.error(error);
     return res.status(500).json({
@@ -222,6 +224,32 @@ export const updateProductsFromCart = async (req, res) => {
   }
 }
 
-export const purchaseCart = async(req, res) => {
-  
+export const purchaseCart = async (req, res, next) => {
+  try {
+    const user = req.user;
+
+    const result = await services.purchaseCart(user);
+
+    if (result.success) {
+      if (result.unavailableProducts) {
+        return createResponse(req, res, 200, {
+          message: result.message,
+          ticket: result.ticket,
+          unavailableProducts: result.unavailableProducts,
+        });
+      } else {
+        return createResponse(req, res, 200, {
+          message: result.message,
+          ticket: result.ticket
+        });
+      }
+    } else {
+      return createResponse(req, res, 400, null, {
+        message: result.message,
+        unavailableProducts: result.unavailableProducts || [],
+      });
+    }
+  } catch (error) {
+    next(error);
+  }
 }

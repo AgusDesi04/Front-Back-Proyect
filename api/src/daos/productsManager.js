@@ -74,7 +74,7 @@ class ProductsManager {
 
   static async updateProduct(id, productUpdates) {
     try {
-        
+
       const updatedProduct = await productsModel.findByIdAndUpdate(id, productUpdates, { new: true });
 
       if (!updatedProduct) {
@@ -85,6 +85,36 @@ class ProductsManager {
     } catch (error) {
       console.error(`Error al actualizar el producto con ID: ${id}`, error);
       throw error;
+    }
+  }
+
+  static async updateProductStock(productId, quantityToReduce) {
+    try {
+      const product = await productsModel.findById(productId);
+
+      if (!product) {
+        throw new Error('Producto no encontrado');
+      }
+
+      if (product.stock < quantityToReduce) {
+        throw new Error('Stock insuficiente');
+      }
+
+      product.stock -= quantityToReduce;
+
+      await product.save();
+
+      return product;
+    } catch (error) {
+      throw new Error(`Error al actualizar el stock: ${error.message}`);
+    }
+  }
+
+  static async getById(prodId) {
+    try {
+      return productsModel.findById(prodId)
+    } catch (error) {
+      throw new Error("error al encontrar el producto por id", error.message)
     }
   }
 }

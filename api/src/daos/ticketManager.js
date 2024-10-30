@@ -1,4 +1,4 @@
-import { ticketModel } from "./models/ticketModel";
+import { ticketModel } from "./models/ticketModel.js";
 
 class ticketManager {
   static async createTicket(newTicket){

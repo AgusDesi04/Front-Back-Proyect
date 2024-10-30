@@ -129,6 +129,18 @@ class CartsManager {
     }
   }
 
+  static async updateCart(cartId, updateData) {
+    try {
+      const updatedCart = await cartsModel.findByIdAndUpdate(cartId, updateData, {
+        new: true, 
+        runValidators: true, 
+      });
+      return updatedCart; 
+    } catch (error) {
+      throw new Error(error.message); 
+    }
+  }
+
 }
 
 

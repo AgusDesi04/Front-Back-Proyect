@@ -1,4 +1,3 @@
-import e from 'express'
 import UserDto from '../dto/userDto.js'
 import * as services from '../services/userServices.js'
 import { createResponse } from '../utils.js'
