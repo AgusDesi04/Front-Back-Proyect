@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken'
 import CartsManager from "../daos/cartsManager.js"
 import usersManager from "../daos/usersManager.js"
-import { createHash, isValidPassword } from "../utils.js"
+import { createHash, isValidPassword } from "../utils/utils.js"
 
 
 

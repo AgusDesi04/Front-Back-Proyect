@@ -1,13 +1,17 @@
-import 'dotenv/config';
 import mongoose from "mongoose";
+import args from "../utils/args.utils.js";
+import env from "../utils/env.utils.js";
+
+const mode = args.mode || 'prod'
+
 export const connDB = async () => {
   try {
 
     await mongoose.connect(
-      process.env.MONGO_URL,
+      env.MONGO_URL,
       { dbName: "practicas-backend2" }
     )
-    console.log('DB CONECTADA!!')
+    console.log('DB CONECTADA EN EL MODO:' + " " + mode)
   } catch (error) {
     console.log(`error!! no se pudo conectar a la base de datos!! ${error}`)
   }

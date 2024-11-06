@@ -1,11 +1,11 @@
 import passport from "passport";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import * as services from "../services/userServices.js";
-import 'dotenv/config'
+import env from "../utils/env.utils.js"
 
 const strategyConfig = {
-  clientID: process.env.CLIENT_ID_GOOGLE,
-  clientSecret: process.env.CLIENT_SECRET_GOOGLE,
+  clientID: env.CLIENT_ID_GOOGLE,
+  clientSecret: env.CLIENT_SECRET_GOOGLE,
   callbackURL: '/users/oauth2/redirect/accounts.google.com',
   scope: ['profile', 'email'],
   state: true

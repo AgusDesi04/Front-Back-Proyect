@@ -1,9 +1,9 @@
-import 'dotenv/config';
+import env from "../utils/env.utils.js"
 import passport from "passport";
 import { ExtractJwt, Strategy as jwtStrategy } from "passport-jwt";
 import * as services from "../services/userServices.js";
 
-const SECRET_KEY = process.env.SECRET_KEY
+const SECRET_KEY = env.SECRET_KEY
 
 const verifyToken = (jwt_payload, done) => {
   if (!jwt_payload) return done(null, false, { messages: 'User Not Found!' });

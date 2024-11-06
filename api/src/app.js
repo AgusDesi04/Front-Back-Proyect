@@ -1,6 +1,5 @@
 import MongoStore from "connect-mongo"
 import cookieParser from "cookie-parser"
-import 'dotenv/config'
 import express from "express"
 import session, { Cookie, Store } from "express-session"
 import passport from "passport"
@@ -15,10 +14,12 @@ import "./passport/local-strategy.js"
 import cartsRouter from "./routes/carts.router.js"
 import productsRouter from "./routes/products.router.js"
 import usersRouter from "./routes/userRouter.js"
-import { __dirname } from "./utils.js"
-
+import args from "./utils/args.utils.js"
+import env from "./utils/env.utils.js"
+import { __dirname } from "./utils/utils.js"
 
 const app = express()
+const mode = args.mode || "prod"
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
@@ -28,14 +29,14 @@ app.use(cookieParser())
 // Session config
 
 const sessionConfig = {
-  secret: process.env.SECRET_KEY,
+  secret: env.SECRET_KEY,
   resave: false,
   saveUninitialized: false,
   cookie: {
     maxAge: 60000
   },
   store: MongoStore.create({
-    mongoUrl: process.env.MONGO_URL,
+    mongoUrl: env.MONGO_URL,
     dbName: "practicas-backend2",
     ttl: 60,
 
@@ -56,7 +57,7 @@ app.use("/api/carts", cartsRouter)
 // manejo de errores
 app.use(errorHandler)
 
-const server = app.listen(8080, () => console.log('server ok en el puerto 8080!'))
+const server = app.listen(8080, () => console.log('server ok en el puerto 8080 en el modo:' + " " + mode))
 
 const io = new Server(server)
 

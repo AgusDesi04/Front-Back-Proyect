@@ -1,7 +1,7 @@
 import CartsManager from "../daos/cartsManager.js"
 import ProductsManager from "../daos/productsManager.js"
 import * as services from "../services/ticketServices.js"
-import { createResponse } from "../utils.js"
+import { createResponse } from "../utils/utils.js"
 
 export const addCarts = async (req, res) => {
   let products = []

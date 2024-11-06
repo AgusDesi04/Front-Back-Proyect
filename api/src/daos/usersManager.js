@@ -1,4 +1,4 @@
-import { createHash, isValidPassword } from "../utils.js";
+import { createHash, isValidPassword } from "../utils/utils.js";
 import { UserModel } from "./models/userModel.js";
 
 export default class usersManager {
@@ -11,7 +11,7 @@ export default class usersManager {
     }
   }
 
-  static async getById(id){
+  static async getById(id) {
     try {
       return await UserModel.findById(id)
     } catch (error) {

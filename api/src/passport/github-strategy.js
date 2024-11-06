@@ -1,11 +1,11 @@
 import passport from "passport";
 import { Strategy as GithubStrategy } from "passport-github2";
 import * as services from "../services/userServices.js";
-import 'dotenv/config'
+import env from "../utils/env.utils.js"
 
 const strategyConfig = {
-  clientID: process.env.CLIENT_ID_GITHUB,
-  clientSecret: process.env.CLIENT_SECRET_GITHUB,
+  clientID: env.CLIENT_ID_GITHUB,
+  clientSecret: env.CLIENT_SECRET_GITHUB,
   callbackURL: 'http://localhost:8080/users/github'
 }
 

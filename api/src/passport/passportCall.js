@@ -1,5 +1,5 @@
 import passport from "passport";
-import { createResponse } from "../utils.js";
+import { createResponse } from "../utils/utils.js";
 
 export const passportCall = (strategy) => {
   return async (req, res, next) => {

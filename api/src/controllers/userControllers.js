@@ -1,6 +1,6 @@
 import UserDto from '../dto/userDto.js'
 import * as services from '../services/userServices.js'
-import { createResponse } from '../utils.js'
+import { createResponse } from '../utils/utils.js'
 
 export const register = async (req, res, next) => {
   try {
