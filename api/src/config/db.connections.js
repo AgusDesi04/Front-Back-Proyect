@@ -9,7 +9,6 @@ export const connDB = async () => {
 
     await mongoose.connect(
       env.MONGO_URL,
-      { dbName: "practicas-backend2" }
     )
     console.log('DB CONECTADA EN EL MODO:' + " " + mode)
   } catch (error) {

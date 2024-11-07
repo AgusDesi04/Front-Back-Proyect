@@ -17,6 +17,7 @@ import usersRouter from "./routes/userRouter.js"
 import args from "./utils/args.utils.js"
 import env from "./utils/env.utils.js"
 import { __dirname } from "./utils/utils.js"
+import mocksRouter from "./routes/mocks.router.js"
 
 const app = express()
 const mode = args.mode || "prod"
@@ -53,6 +54,8 @@ app.use(passport.session())
 app.use('/api/users', usersRouter)
 app.use("/api/products", productsRouter)
 app.use("/api/carts", cartsRouter)
+app.use("/api/mocks", mocksRouter)
+
 
 // manejo de errores
 app.use(errorHandler)

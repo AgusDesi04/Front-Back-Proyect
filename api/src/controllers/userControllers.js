@@ -1,3 +1,4 @@
+import { faker } from '@faker-js/faker'
 import UserDto from '../dto/userDto.js'
 import * as services from '../services/userServices.js'
 import { createResponse } from '../utils/utils.js'
@@ -59,5 +60,69 @@ export const getCurrentUserDto = async (req, res, next) => {
   } catch (error) {
     next(error)
   }
+}
+
+export const registerMock = async (req, res, next) => {
+
+  try {
+    const first_name = faker.person.firstName()
+    const last_name = faker.person.lastName()
+
+    const userMock = {
+      first_name: first_name,
+      last_name: last_name,
+      email: first_name + last_name + "@coder.com",
+      age: faker.number.int({ max: 80 }),
+      avatar: faker.image.avatar(),
+      password: "hola1234"
+    }
+
+    const response = await services.registerMock(userMock)
+
+    return createResponse(req, res, 200, response)
+
+  } catch (error) {
+    next(error)
+  }
+
+
+}
+
+export const registerMultipleMocks = async (req, res, next) => {
+  try {
+    const quantity = parseInt(req.params.n, 10)
+
+    if (!quantity || isNaN(quantity)) {
+      return createResponse(req, res, 400, null, { msg: "you need to give a param" })
+    }
+    
+
+    const mocks = []
+
+    for (let i = 0; i < quantity; i++) {
+      const first_name = faker.person.firstName()
+      const last_name = faker.person.lastName()
+
+      const userMock = {
+        first_name: first_name,
+        last_name: last_name,
+        email: first_name + last_name + "@coder.com",
+        age: faker.number.int({ max: 80 }),
+        avatar: faker.image.avatar(),
+        password: "hola1234"
+      }
+
+     await services.registerMock(userMock)
+     mocks.push(userMock)
+    }
+
+
+
+    return createResponse(req, res, 200, {"mocks creados:": mocks})
+
+  } catch (error) {
+    next(error)
+  }
+
 }
 

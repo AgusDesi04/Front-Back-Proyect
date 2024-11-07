@@ -73,3 +73,27 @@ export const login = async ({ email, password }) => {
     throw new Error(error);
   }
 };
+
+
+export const registerMock = async (mock) => {
+  try {
+    const { email, password } = mock
+    const existsMock = await getUserByEmail(email)
+
+    if (!existsMock) {
+      const mockCartUser = await CartsManager.addCarts()
+      const newMockUser = await usersManager.register({
+        ...mock,
+        password: await createHash(password),
+        cart: mockCartUser._id
+      })
+
+      return newMockUser
+    } else {
+      return null
+    }
+
+  } catch (error) {
+    throw new Error(error)
+  }
+}
