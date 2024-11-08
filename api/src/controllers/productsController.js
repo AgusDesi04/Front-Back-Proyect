@@ -1,4 +1,5 @@
-import ProductsManager from "../daos/productsManager.js"
+import { faker } from '@faker-js/faker';
+import ProductsManager from "../daos/productsManager.js";
 
 export const getProductsPaginated = async (req, res) => {
 
@@ -49,7 +50,7 @@ export const getProductsPaginated = async (req, res) => {
   }
 }
 
-export const findProductById =  async (req, res) => {
+export const findProductById = async (req, res) => {
   let { pid } = req.params
 
   id = parseInt(pid, 10);
@@ -114,8 +115,8 @@ export const addProduct = async (req, res) => {
 }
 
 export const updateProduct = async (req, res) => {
-  const { pid } = req.params;  
-  const productUpdates = req.body;  
+  const { pid } = req.params;
+  const productUpdates = req.body;
 
 
   try {
@@ -127,10 +128,10 @@ export const updateProduct = async (req, res) => {
     });
   } catch (error) {
     console.error("Error al actualizar el producto:", error);
- 
-    res.status(500).json({ 
+
+    res.status(500).json({
       message: "Error al actualizar el producto",
-      error: error.message 
+      error: error.message
     });
   }
 }
@@ -158,5 +159,37 @@ export const deleteProduct = async (req, res) => {
       detalle: error.message
     });
   }
+
+}
+const addProductsMocks = async (req, res, next) => {
+
+  try {
+    const quantity = parseInt(req.params.n, 10)
+
+    if (!quantity || isNaN(quantity)) {
+      return createResponse(req, res, 400, null, { msg: "you need to give a param" })
+    }
+
+    const productMocks = []
+
+    for (let i = 0; i < quantity; i++) {
+      const product = {
+        title: faker.commerce.product(),
+        description: faker.commerce.productDescription(),
+        code: "mockCode:" + faker.number.int({ max: 100 }),
+        price: faker.number.int({ max: 10000 }),
+        stock: faker.number.int({ max: 100 }),
+        category: faker.commerce.department()
+      }
+    }
+
+
+
+  } catch (error) {
+    next(error)
+  }
+
+
+
 
 }
