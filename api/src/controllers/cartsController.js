@@ -3,7 +3,7 @@ import ProductsManager from "../daos/productsManager.js"
 import * as services from "../services/ticketServices.js"
 import { createResponse } from "../utils/utils.js"
 
-export const addCarts = async (req, res) => {
+export const addCarts = async (req, res, next) => {
   let products = []
 
   let carts = await CartsManager.getCarts()
@@ -22,18 +22,11 @@ export const addCarts = async (req, res) => {
     return res.status(201).json({ idCart: newCart._id, message: 'Se ha generado un nuevo carrito.' });
 
   } catch (error) {
-    console.log(error)
-    res.setHeader("content-type", "aplication/json")
-    return res.status(500).json(
-      {
-        error: `error inesperado en el servidor!!`,
-        detalle: `${error.message}`
-      }
-    )
+    next(error)
   }
 }
 
-export const getCartsPopulated = async (req, res) => {
+export const getCartsPopulated = async (req, res, next) => {
 
   let { cid } = req.params
 
@@ -49,14 +42,7 @@ export const getCartsPopulated = async (req, res) => {
     return res.status(200).json({ cart })
 
   } catch (error) {
-    res.setHeader("content-type", "aplication/json")
-
-    return res.status(500).json(
-      {
-        error: `error inesperado en el servidor!!`,
-        detalle: `${error.message}`
-      }
-    )
+    next(error)
   }
 
 
@@ -66,7 +52,7 @@ export const getCartsPopulated = async (req, res) => {
 
 }
 
-export const addProductInCart = async (req, res) => {
+export const addProductInCart = async (req, res, next) => {
   // obtengo el carrito mediante el :cid y el producto mediante el :pid
   let { cid } = req.params
   let { pid } = req.params
@@ -81,22 +67,13 @@ export const addProductInCart = async (req, res) => {
 
   } catch (error) {
 
-    console.log(error)
-
-    res.setHeader("content-type", "aplication/json")
-
-    return res.status(500).json(
-      {
-        error: `error inesperado en el servidor!!`,
-        detalle: `${error.message}`
-      }
-    )
+   next(error)
 
   }
 
 }
 
-export const deleteProductFromCart = async (req, res) => {
+export const deleteProductFromCart = async (req, res, next) => {
   let { cid } = req.params
   let { pid } = req.params
 
@@ -109,19 +86,12 @@ export const deleteProductFromCart = async (req, res) => {
 
 
   } catch (error) {
-    res.setHeader("content-type", "aplication/json")
-
-    return res.status(500).json(
-      {
-        error: `error inesperado en el servidor!!`,
-        detalle: `${error.message}`
-      }
-    )
+    next(error)
   }
 
 }
 
-export const updateQuantProductInCart = async (req, res) => {
+export const updateQuantProductInCart = async (req, res, next) => {
   let { cid } = req.params
   let { pid } = req.params
   let { quantity } = req.body
@@ -140,18 +110,11 @@ export const updateQuantProductInCart = async (req, res) => {
     return res.status(200).json({ newCart })
 
   } catch (error) {
-    res.setHeader("content-type", "aplication/json")
-
-    return res.status(500).json(
-      {
-        error: `error inesperado en el servidor!!`,
-        detalle: `${error.message}`
-      }
-    )
+    next(error)
   }
 }
 
-export const deleteAllProductsFromCart = async (req, res) => {
+export const deleteAllProductsFromCart = async (req, res, next) => {
   let { cid } = req.params
 
   if (!cid) {
@@ -167,19 +130,12 @@ export const deleteAllProductsFromCart = async (req, res) => {
     return res.status(200).json({ newCart })
 
   } catch (error) {
-    res.setHeader("content-type", "aplication/json")
-
-    return res.status(500).json(
-      {
-        error: `error inesperado en el servidor!!`,
-        detalle: `${error.message}`
-      }
-    )
+    next(error)
   }
 
 }
 
-export const updateProductsFromCart = async (req, res) => {
+export const updateProductsFromCart = async (req, res, next) => {
   let { cid } = req.params;
   let { products } = req.body;
 
@@ -216,11 +172,7 @@ export const updateProductsFromCart = async (req, res) => {
     return res.status(200).json({ message: "Carrito actualizado con éxito.", cart });
 
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({
-      error: "Error inesperado en el servidor.",
-      detalle: error.message,
-    });
+    next(error)
   }
 }
 
