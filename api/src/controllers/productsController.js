@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker';
 import ProductsManager from "../daos/productsManager.js";
 
-export const getProductsPaginated = async (req, res) => {
+export const getProductsPaginated = async (req, res, next) => {
 
   let { page = 1, limit = 10, sort = null, filter = null } = req.query
 
@@ -38,43 +38,39 @@ export const getProductsPaginated = async (req, res) => {
       filter
     });
   } catch (error) {
-
-    console.log(error);
-    res.setHeader('Content-Type', 'application/json');
-    return res.status(500).json(
-      {
-        error: `Error inesperado en el servidor - Intente más tarde, o contacte a su administrador`,
-        detalle: `${error.message}`
-      }
-    )
+    next(error)
   }
 }
 
-export const findProductById = async (req, res) => {
+export const findProductById = async (req, res, next) => {
   let { pid } = req.params
 
-  id = parseInt(pid, 10);
+  try {
+    id = parseInt(pid, 10);
 
-  if (isNaN(id)) {
-    res.setHeader("content-type", "aplication/json")
-    return res.status(400).send("El id debe ser numerico!!")
+    if (isNaN(id)) {
+      res.setHeader("content-type", "aplication/json")
+      return res.status(400).send("El id debe ser numerico!!")
+    }
+
+
+
+    let products = await ProductsManager.getProducts()
+
+    let product = products.find(p => p.id === id)
+
+    if (!product) {
+      res.setHeader("content-type", "aplication/json")
+      return res.status(400).send(`El producto con el id: ${id} no se encuentra entre los productos registrados!`)
+    }
+
+    res.status(200).json({ product })
+  } catch (error) {
+    next(error)
   }
-
-
-
-  let products = await ProductsManager.getProducts()
-
-  let product = products.find(p => p.id === id)
-
-  if (!product) {
-    res.setHeader("content-type", "aplication/json")
-    return res.status(400).send(`El producto con el id: ${id} no se encuentra entre los productos registrados!`)
-  }
-
-  res.status(200).json({ product })
 }
 
-export const addProduct = async (req, res) => {
+export const addProduct = async (req, res, next) => {
   let { title, description, code, price, status, stock, category } = req.body
 
   // VALIDACIONES
@@ -102,19 +98,12 @@ export const addProduct = async (req, res) => {
     return res.status(200).json({ newProduct })
 
   } catch (error) {
-    console.log(error)
-    res.setHeader("content-type", "aplication/json")
-    return res.status(500).json(
-      {
-        error: `error inesperado en el servidor!!`,
-        detalle: `${error.message}`
-      }
-    )
+    next(error)
   }
 
 }
 
-export const updateProduct = async (req, res) => {
+export const updateProduct = async (req, res, next) => {
   const { pid } = req.params;
   const productUpdates = req.body;
 
@@ -127,16 +116,11 @@ export const updateProduct = async (req, res) => {
       product: updatedProduct
     });
   } catch (error) {
-    console.error("Error al actualizar el producto:", error);
-
-    res.status(500).json({
-      message: "Error al actualizar el producto",
-      error: error.message
-    });
+    next(error)
   }
 }
 
-export const deleteProduct = async (req, res) => {
+export const deleteProduct = async (req, res, next) => {
   let { id } = req.params
 
   try {
@@ -152,16 +136,11 @@ export const deleteProduct = async (req, res) => {
 
 
   } catch (error) {
-    console.log(error);
-    res.setHeader("content-type", "aplication/json")
-    res.status(500).json({
-      error: "Error inesperado en el servidor - Intente más tarde, o contacte a su administrador",
-      detalle: error.message
-    });
+    next(error)
   }
 
 }
-const addProductsMocks = async (req, res, next) => {
+export const addProductsMocks = async (req, res, next) => {
 
   try {
     const quantity = parseInt(req.params.n, 10)
