@@ -18,6 +18,7 @@ import args from "./utils/args.utils.js"
 import env from "./utils/env.utils.js"
 import { __dirname } from "./utils/utils.js"
 import mocksRouter from "./routes/mocks.router.js"
+import winston from "./middlewares/winstonLogger.mid.js"
 
 const app = express()
 const mode = args.mode || "prod"
@@ -25,7 +26,7 @@ const mode = args.mode || "prod"
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(cookieParser())
-
+app.use(winston)
 
 // Session config
 
